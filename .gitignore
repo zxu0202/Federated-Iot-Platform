@@ -1,0 +1,111 @@
+# Local configuration and credentials
+**/.env
+**/.env.*
+!**/.env.example
+**/.runtime.env
+**/.pgpass
+**/secrets/
+**/credentials/
+*.pem
+*.key
+*.p12
+*.pfx
+*.secret
+
+# Editor, local tooling, and operating-system state
+**/.idea/
+**/.vscode/
+**/.fleet/
+**/.cursor/
+**/.co[d]ex/
+**/.agents/
+**/.claude/
+**/.continue/
+*.code-workspace
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Internal coordination and independent QA material
+/qa/
+**/PAUSE_CHECKPOINT*.md
+**/*HANDOFF*.md
+/algorithm-worker/docs/qa_*_evidence_inputs.md
+/deploy/runbooks/*-proposal.md
+
+# Logs, temporary state, and local evidence
+*.log
+**/logs/
+**/run/
+**/runs/
+**/tmp/
+**/temp/
+**/evidence/
+**/reports/
+
+# Local data and generated result files
+**/data/
+**/datasets/
+**/artifacts/
+**/results/
+**/exports/
+**/uploads/
+**/backups/
+**/coverage/
+**/.coverage
+**/htmlcov/
+
+# JavaScript and TypeScript outputs
+**/node_modules/
+**/dist/
+**/build/
+**/.cache/
+**/.npm-cache/
+**/.parcel-cache/
+**/.vite/
+**/.tmp-verify/
+*.tsbuildinfo
+
+# Python outputs and local package inputs
+**/__pycache__/
+*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.venv/
+**/venv/
+**/*.egg-info/
+**/wheelhouse/*
+!/algorithm-worker/wheelhouse/.gitkeep
+!/algorithm-worker/wheelhouse/SHA256SUMS
+
+# Go outputs and locally restored dependency trees. Public Git source keeps
+# go.mod/go.sum but does not track backend/vendor.
+**/bin/
+*.test
+*.out
+**/vendor/
+
+# Container overrides and generated release packages
+**/compose.override.yaml
+**/compose.override.yml
+**/docker-compose.override.yaml
+**/docker-compose.override.yml
+/deploy/release/
+/deploy/package-output/
+/deploy/offline/package/output/
+/deploy/offline/package/staging/
+/deploy/release-evidence/local-*.json
+/deploy/release-evidence/m1-local-*.json
+/deploy/release-evidence/*-compose-smoke.json
+/deploy/release-evidence/*-deployment-check.json
+/deploy/release-evidence/*machine*.json
+/deploy/release-evidence/*host*.json
+/deploy/release-evidence/*.local.json
+/deploy/**/*.tar
+/deploy/**/*.tar.gz
+/deploy/**/*.tgz
+/deploy/**/*.zip
+/deploy/**/*.oci
+/deploy/**/*.oci.tar

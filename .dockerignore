@@ -1,0 +1,58 @@
+# Repository and workstation state
+.git/
+.gitignore
+**/.DS_Store
+**/Thumbs.db
+**/.idea/
+**/.vscode/
+**/.fleet/
+**/.cursor/
+**/.co[d]ex/
+**/.agents/
+**/.claude/
+**/.continue/
+**/PAUSE_CHECKPOINT*.md
+**/*HANDOFF*.md
+
+# Generated language outputs and caches
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/*.log
+**/node_modules/
+**/dist/
+**/coverage/
+**/tmp/
+
+# Deployment secrets and operator-specific configuration
+**/.env
+**/.env.*
+!**/.env.example
+**/.runtime.env
+**/secrets/
+**/credentials/
+deploy/config/platform.yaml
+
+# QA, internal evidence, runtime data, and generated release output
+qa/
+**/evidence/
+**/reports/
+**/data/
+**/datasets/
+**/artifacts/
+**/results/
+**/exports/
+**/uploads/
+**/backups/
+deploy/release/
+deploy/package-output/
+deploy/offline/package/output/
+deploy/offline/package/staging/
+deploy/runbooks/*-proposal.md
+algorithm-worker/docs/qa_*_evidence_inputs.md
+
+# Required offline image-build inputs are not tracked by public Git, but remain
+# available to the local Docker build context after an approved staging step:
+# backend/vendor, frontend/.npm-cache, and algorithm-worker/wheelhouse.
