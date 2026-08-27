@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "worker.event.v1.schema.json",
+  "title": "Algorithm Worker Progress Event",
+  "type": "object",
+  "required": ["schema_version", "job_id", "attempt_id", "status", "stage", "occurred_at", "diagnostics"],
+  "properties": {
+    "schema_version": {"const": "worker.event.v1"},
+    "status": {"enum": ["RUNNING", "CANCELLING"]},
+    "stage": {"enum": ["PREPROCESSING", "LOCAL_TRAINING", "ANCHOR_AGGREGATING", "GLOBAL_DISTILLING", "CALIBRATING", "TESTING"]},
+    "agent": {"type": ["integer", "null"], "minimum": 1, "maximum": 3}
+  },
+  "additionalProperties": true
+}

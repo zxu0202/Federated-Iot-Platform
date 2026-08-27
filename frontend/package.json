@@ -1,0 +1,21 @@
+{
+  "name": "zx-federated-iot-platform-frontend",
+  "version": "1.0.0-m1",
+  "private": true,
+  "type": "module",
+  "description": "Offline TypeScript SPA for the S1 federated IoT simulation platform.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:mock": "node scripts/build.mjs --mock",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "test": "node scripts/build.mjs --mock && node tests/contract.test.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "verify": "npm run typecheck && npm run check:i18n && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "typescript": "4.9.5"
+  },
+  "engines": {
+    "node": "14.18.0"
+  }
+}

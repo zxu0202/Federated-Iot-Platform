@@ -1,0 +1,61 @@
+{
+  "contract_version": "worker.task.v1",
+  "job_id": "job_fixture_simulation_001",
+  "job_type": "SIMULATION",
+  "run_id": "run_fixture_001",
+  "attempt_id": "attempt_fixture_002",
+  "lease_token": "fixture-token-not-a-secret",
+  "dataset": {
+    "dataset_id": "ds_fixture_001",
+    "relative_path": "datasets/ds_fixture_001/source.csv",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "timezone": "Asia/Shanghai",
+    "columns": ["Time_base", "dzdl_1", "dzdl_2", "dzdl_3", "dzdl_4", "zl", "sd"]
+  },
+  "run_mode": "REFERENCE",
+  "parameter_snapshot": {
+    "version_id": "reference-v1",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "shared_parameters": {},
+    "agents": [
+      {"agent": 1, "segment": "EARLY", "parameters": {}},
+      {"agent": 2, "segment": "MIDDLE", "parameters": {}},
+      {"agent": 3, "segment": "LATE", "parameters": {}}
+    ],
+    "fixed_items": {}
+  },
+  "mapping_snapshot": {
+    "version_id": "identity-v1",
+    "mapping_type": "identity",
+    "parameters": {},
+    "result_unit": "A",
+    "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "field_standard_snapshot": {
+    "configuration_version": "platform-config.v1",
+    "sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "zl": {"unit_symbol": null, "validation_enabled": false},
+    "sd": {"unit_symbol": null, "validation_enabled": false},
+    "sampling": {"expected_period_ms": null, "tolerance_ms": null}
+  },
+  "runtime": {
+    "algorithm_version": "algorithm-m1-v1",
+    "worker_version": "worker-m1-v1",
+    "image_digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "numeric_runtime": "python-3.12",
+    "master_seed": 2026,
+    "random_streams": {
+      "generator": "MT19937_TWISTER_COMPAT",
+      "seed_mapping_version": "reference-anchor-v1",
+      "base_center_seed_by_agent": {"1": 2027, "2": 2028, "3": 2029},
+      "transition_center_seed_by_agent": {"1": 2047, "2": 2048, "3": 2049},
+      "boundary_seed_by_agent": {"1": 2067, "2": 2068, "3": 2069},
+      "public_anchor_seed": 2126
+    }
+  },
+  "output": {
+    "relative_tmp_directory": "runs/run_fixture_001/tmp/attempt_fixture_002",
+    "required_artifact_schema": "artifact.manifest.v1"
+  },
+  "limits": {"memory_bytes": 10737418240, "cancel_check_target_ms": 5000}
+}

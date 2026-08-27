@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dataset-preflight.summary.v1.schema.json",
+  "title": "Dataset Preflight Summary",
+  "type": "object",
+  "required": ["schema_version", "preprocessing_contract_version", "input_sha256", "counts", "filter_path", "summary_sha256"],
+  "properties": {
+    "schema_version": {"const": "dataset-preflight.summary.v1"},
+    "preprocessing_contract_version": {"const": "preprocessing.v1"},
+    "input_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "counts": {"type": "object"},
+    "filter_path": {"type": "string"},
+    "summary_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,7 @@
+{
+  "media_type": "application/vnd.oci.image.manifest.v1+json",
+  "manifest_file": "test-only-worker-image.oci-manifest.json",
+  "digest": "sha256:b860f061c803bc73ec8ae0b84bf0db309d10c8750f17f013f17ad0655f531642",
+  "scope": "contract-test-only",
+  "release_candidate_image": false
+}

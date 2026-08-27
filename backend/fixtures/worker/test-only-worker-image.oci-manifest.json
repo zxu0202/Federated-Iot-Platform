@@ -1,0 +1,1 @@
+{"schemaVersion":2,"mediaType":"application/vnd.oci.image.manifest.v1+json","config":{"mediaType":"application/vnd.oci.image.config.v1+json","digest":"sha256:4bf5122f344554c53bde2ebb8cd2b7e3d1600ad631c385a5d7c6f96a1f6e6a6a","size":2},"layers":[],"annotations":{"org.opencontainers.image.ref.name":"zx/federated-iot-platform-contract-test-only"}}

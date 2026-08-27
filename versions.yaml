@@ -1,0 +1,14 @@
+schema_version: component-versions.v1
+platform_release: 1.0.0-m1
+components:
+  frontend: 1.0.0-m1
+  backend: 1.0.0-m1
+  algorithm: 1.0.0-m1
+  algorithm_worker: 1.0.0-m1
+package_versions:
+  algorithm_worker_python: 1.0.0.dev1
+contracts:
+  api: v1
+  worker_task: worker.task.v1
+  preprocessing: preprocessing.v1
+  artifact_manifest: artifact.manifest.v1

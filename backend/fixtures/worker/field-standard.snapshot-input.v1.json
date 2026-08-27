@@ -1,0 +1,15 @@
+{
+  "configuration_version": "platform-config.v1",
+  "sampling": {
+    "expected_period_ms": null,
+    "tolerance_ms": null
+  },
+  "sd": {
+    "unit_symbol": null,
+    "validation_enabled": false
+  },
+  "zl": {
+    "unit_symbol": null,
+    "validation_enabled": false
+  }
+}

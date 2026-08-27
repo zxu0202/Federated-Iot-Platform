@@ -1,0 +1,24 @@
+{
+  "contract_version": "worker.task.v1",
+  "job_id": "job_fixture_preflight_001",
+  "job_type": "DATASET_PREFLIGHT",
+  "run_id": null,
+  "attempt_id": "attempt_fixture_001",
+  "lease_token": "fixture-token-not-a-secret",
+  "dataset": {
+    "dataset_id": "ds_fixture_001",
+    "relative_path": "datasets/ds_fixture_001/source.csv",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "timezone": "Asia/Shanghai",
+    "columns": ["Time_base", "dzdl_1", "dzdl_2", "dzdl_3", "dzdl_4", "zl", "sd"]
+  },
+  "preprocessing": {
+    "contract_version": "preprocessing.v1",
+    "field_standard_configuration_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "output": {
+    "relative_tmp_directory": "datasets/ds_fixture_001/preflight/tmp/attempt_fixture_001",
+    "required_summary_schema": "dataset-preflight.summary.v1"
+  },
+  "limits": {"memory_bytes": 10737418240, "cancel_check_target_ms": 5000}
+}

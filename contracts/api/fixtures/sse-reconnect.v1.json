@@ -1,0 +1,13 @@
+{
+  "fixture_version": "sse-reconnect.v1",
+  "run_id": "run_fixture_events",
+  "retention": 3,
+  "persisted_events": [
+    {"event_id": 40, "event": "simulation.state", "data": {"run_id": "run_fixture_events", "status": "QUEUED", "occurred_at": "2026-08-16T00:00:40.000Z"}},
+    {"event_id": 41, "event": "simulation.state", "data": {"run_id": "run_fixture_events", "status": "RUNNING", "occurred_at": "2026-08-16T00:00:41.000Z"}},
+    {"event_id": 42, "event": "simulation.stage", "data": {"run_id": "run_fixture_events", "status": "RUNNING", "current_stage": "LOCAL_TRAINING", "occurred_at": "2026-08-16T00:00:42.000Z"}}
+  ],
+  "catch_up": {"last_event_id": 40, "expected_event_ids": [41, 42], "expected_reset": false},
+  "expired_cursor": {"last_event_id": 38, "expected_event": "stream.reset", "expected_data": {"reason": "event_retention_expired", "latest_event_id": 42}, "client_action": "GET simulation detail and summary within five seconds before reconnecting"},
+  "heartbeat": {"interval_seconds": 15, "event": "heartbeat", "data_fields": ["run_id", "latest_event_id", "server_time"]}
+}

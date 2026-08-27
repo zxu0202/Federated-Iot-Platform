@@ -1,0 +1,14 @@
+{
+  "schema_version": "worker.event.v1",
+  "job_id": "job_fixture_preflight_001",
+  "run_id": null,
+  "attempt_id": "attempt_fixture_001",
+  "status": "RUNNING",
+  "stage": "PREPROCESSING",
+  "agent": null,
+  "occurred_at": "2026-08-16T08:30:00.000+08:00",
+  "diagnostics": {
+    "running_rows": 35,
+    "summary_sha256": "fixture-summary-not-materialized"
+  }
+}

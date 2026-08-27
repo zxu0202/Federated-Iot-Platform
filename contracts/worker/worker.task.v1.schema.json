@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "worker.task.v1.schema.json",
+  "title": "Algorithm Worker Persistent Task",
+  "description": "Strict M0 v0.3 task contract for the single-capacity Algorithm Worker pool.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "job_id",
+    "job_type",
+    "run_id",
+    "attempt_id",
+    "lease_token",
+    "dataset",
+    "output",
+    "limits"
+  ],
+  "properties": {
+    "contract_version": { "const": "worker.task.v1" },
+    "job_id": { "$ref": "#/$defs/opaqueId" },
+    "job_type": { "enum": ["SIMULATION", "DATASET_PREFLIGHT"] },
+    "run_id": { "type": ["string", "null"] },
+    "attempt_id": { "$ref": "#/$defs/opaqueId" },
+    "lease_token": { "type": "string", "minLength": 16, "maxLength": 512 },
+    "dataset": { "$ref": "#/$defs/dataset" },
+    "run_mode": { "enum": ["CUSTOM", "REFERENCE"] },
+    "parameter_snapshot": { "$ref": "#/$defs/parameterSnapshot" },
+    "mapping_snapshot": { "$ref": "#/$defs/mappingSnapshot" },
+    "field_standard_snapshot": { "$ref": "#/$defs/fieldStandardSnapshot" },
+    "runtime": { "$ref": "#/$defs/runtime" },
+    "preprocessing": { "$ref": "#/$defs/preprocessing" },
+    "output": { "type": "object" },
+    "limits": { "$ref": "#/$defs/limits" }
+  },
+  "oneOf": [
+    {
+      "title": "Simulation task",
+      "properties": {
+        "job_type": { "const": "SIMULATION" },
+        "run_id": { "$ref": "#/$defs/opaqueId" },
+        "dataset": {
+          "allOf": [
+            { "$ref": "#/$defs/dataset" },
+            { "required": ["columns"] }
+          ]
+        },
+        "output": { "$ref": "#/$defs/simulationOutput" }
+      },
+      "required": [
+        "run_mode",
+        "parameter_snapshot",
+        "mapping_snapshot",
+        "field_standard_snapshot",
+        "runtime"
+      ],
+      "not": { "required": ["preprocessing"] }
+    },
+    {
+      "title": "Dataset preflight task",
+      "properties": {
+        "job_type": { "const": "DATASET_PREFLIGHT" },
+        "run_id": { "type": "null" },
+        "output": { "$ref": "#/$defs/preflightOutput" }
+      },
+      "required": ["preprocessing"],
+      "not": {
+        "anyOf": [
+          { "required": ["run_mode"] },
+          { "required": ["parameter_snapshot"] },
+          { "required": ["mapping_snapshot"] },
+          { "required": ["field_standard_snapshot"] },
+          { "required": ["runtime"] }
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "opaqueId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "ociDigest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*\\\\)(?!.*//)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*(?:^|/)\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "columnList": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": ["Time_base", "dzdl_1", "dzdl_2", "dzdl_3", "dzdl_4", "zl", "sd"]
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_id", "relative_path", "sha256", "timezone"],
+      "properties": {
+        "dataset_id": { "$ref": "#/$defs/opaqueId" },
+        "relative_path": { "$ref": "#/$defs/safeRelativePath" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "timezone": { "const": "Asia/Shanghai" },
+        "columns": { "$ref": "#/$defs/columnList" }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["agent", "segment", "parameters"],
+      "properties": {
+        "agent": { "type": "integer", "minimum": 1, "maximum": 3 },
+        "segment": { "enum": ["EARLY", "MIDDLE", "LATE"] },
+        "parameters": { "type": "object" }
+      }
+    },
+    "parameterSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version_id", "sha256", "shared_parameters", "agents", "fixed_items"],
+      "properties": {
+        "version_id": { "$ref": "#/$defs/opaqueId" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "shared_parameters": { "type": "object" },
+        "agents": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "$ref": "#/$defs/agent" }
+        },
+        "fixed_items": { "type": "object" }
+      }
+    },
+    "mappingSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version_id", "mapping_type", "parameters", "result_unit", "sha256"],
+      "properties": {
+        "version_id": { "$ref": "#/$defs/opaqueId" },
+        "mapping_type": { "const": "identity" },
+        "parameters": { "type": "object", "maxProperties": 0 },
+        "result_unit": { "const": "A" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "standardField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_symbol", "validation_enabled"],
+      "properties": {
+        "unit_symbol": { "type": ["string", "null"] },
+        "validation_enabled": { "type": "boolean" }
+      }
+    },
+    "fieldStandardSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["configuration_version", "sha256", "zl", "sd", "sampling"],
+      "properties": {
+        "configuration_version": { "$ref": "#/$defs/opaqueId" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "zl": { "$ref": "#/$defs/standardField" },
+        "sd": { "$ref": "#/$defs/standardField" },
+        "sampling": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["expected_period_ms", "tolerance_ms"],
+          "properties": {
+            "expected_period_ms": { "type": ["integer", "null"], "minimum": 1 },
+            "tolerance_ms": { "type": ["integer", "null"], "minimum": 1 }
+          }
+        }
+      }
+    },
+    "seedMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["1", "2", "3"],
+      "properties": {
+        "1": { "type": "integer", "minimum": 0 },
+        "2": { "type": "integer", "minimum": 0 },
+        "3": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm_version",
+        "worker_version",
+        "image_digest",
+        "numeric_runtime",
+        "master_seed",
+        "random_streams"
+      ],
+      "properties": {
+        "algorithm_version": { "$ref": "#/$defs/opaqueId" },
+        "worker_version": { "$ref": "#/$defs/opaqueId" },
+        "image_digest": { "$ref": "#/$defs/ociDigest" },
+        "numeric_runtime": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "master_seed": { "type": "integer", "minimum": 0 },
+        "random_streams": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "generator",
+            "seed_mapping_version",
+            "base_center_seed_by_agent",
+            "transition_center_seed_by_agent",
+            "boundary_seed_by_agent",
+            "public_anchor_seed"
+          ],
+          "properties": {
+            "generator": { "const": "MT19937_TWISTER_COMPAT" },
+            "seed_mapping_version": { "$ref": "#/$defs/opaqueId" },
+            "base_center_seed_by_agent": { "$ref": "#/$defs/seedMap" },
+            "transition_center_seed_by_agent": { "$ref": "#/$defs/seedMap" },
+            "boundary_seed_by_agent": { "$ref": "#/$defs/seedMap" },
+            "public_anchor_seed": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "preprocessing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_version", "field_standard_configuration_sha256"],
+      "properties": {
+        "contract_version": { "const": "preprocessing.v1" },
+        "field_standard_configuration_sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "simulationOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_tmp_directory", "required_artifact_schema"],
+      "properties": {
+        "relative_tmp_directory": { "$ref": "#/$defs/safeRelativePath" },
+        "required_artifact_schema": { "const": "artifact.manifest.v1" }
+      }
+    },
+    "preflightOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relative_tmp_directory", "required_summary_schema"],
+      "properties": {
+        "relative_tmp_directory": { "$ref": "#/$defs/safeRelativePath" },
+        "required_summary_schema": { "const": "dataset-preflight.summary.v1" }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["memory_bytes", "cancel_check_target_ms"],
+      "properties": {
+        "memory_bytes": { "type": "integer", "minimum": 1 },
+        "cancel_check_target_ms": { "type": "integer", "minimum": 1, "maximum": 5000 }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zx.local/contracts/api/simulation-create.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dataset_id", "run_mode", "parameter_profile_version_id", "load_mapping_version_id", "agent_overrides", "seed"],
+  "properties": {
+    "dataset_id": {"type": "string", "minLength": 1},
+    "run_mode": {"enum": ["REFERENCE", "CUSTOM"]},
+    "parameter_profile_version_id": {"type": "string", "minLength": 1},
+    "load_mapping_version_id": {"type": "string", "minLength": 1},
+    "agent_overrides": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["agent", "parameters"],
+        "properties": {"agent": {"enum": [1, 2, 3]}, "parameters": {"type": "object", "maxProperties": 0}}
+      },
+      "allOf": [
+        {"contains": {"type": "object", "properties": {"agent": {"const": 1}}, "required": ["agent"]}},
+        {"contains": {"type": "object", "properties": {"agent": {"const": 2}}, "required": ["agent"]}},
+        {"contains": {"type": "object", "properties": {"agent": {"const": 3}}, "required": ["agent"]}}
+      ]
+    },
+    "seed": {"type": "integer", "minimum": 1},
+    "display_name": {"type": "string", "maxLength": 256}
+  }
+}

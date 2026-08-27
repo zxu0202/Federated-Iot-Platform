@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://zx.local/contracts/api/sse-event.v1.schema.json",
+  "type": "object",
+  "required": ["run_id", "occurred_at"],
+  "properties": {
+    "run_id": {"type": "string", "minLength": 1},
+    "occurred_at": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["CREATED", "VALIDATING", "QUEUED", "RUNNING", "CANCELLING", "GENERATING_ARTIFACTS", "COMPLETED", "CANCELLED", "FAILED", "FAILED_RECOVERABLE"]},
+    "current_stage": {"enum": ["PREPROCESSING", "LOCAL_TRAINING", "ANCHOR_AGGREGATING", "GLOBAL_DISTILLING", "CALIBRATING", "TESTING"]}
+  }
+}

@@ -1,0 +1,4 @@
+# Intentionally empty: dependencies=[] in pyproject.toml.
+#
+# This tracked marker preserves the offline wheelhouse build input. Do not add
+# fabricated wheels. Every future wheel must match a hash-pinned requirement.

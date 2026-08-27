@@ -1,0 +1,15 @@
+{
+  "fixture_version": "idempotency.v1",
+  "idempotency_key": "fixture-idempotency-key-0001",
+  "normalized_request": {
+    "dataset_id": "ds_fixture_valid",
+    "run_mode": "REFERENCE",
+    "parameter_profile_version_id": "reference-v1",
+    "load_mapping_version_id": "identity-v1",
+    "agent_overrides": [{"agent": 1, "parameters": {}}, {"agent": 2, "parameters": {}}, {"agent": 3, "parameters": {}}],
+    "seed": 2026,
+    "display_name": "fixture-reference-run"
+  },
+  "replay": {"expected_http_status": 200, "same_run_id": true, "additional_worker_job_rows": 0},
+  "conflict": {"changed_field": "seed", "changed_value": 2027, "expected_http_status": 409, "error_code": "IDEMPOTENCY_CONFLICT", "additional_worker_job_rows": 0}
+}

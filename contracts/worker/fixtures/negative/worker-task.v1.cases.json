@@ -1,0 +1,36 @@
+[
+  {
+    "case": "simulation_missing_run_id",
+    "base": "simulation-task.v1.json",
+    "operation": "remove",
+    "path": ["run_id"]
+  },
+  {
+    "case": "preflight_cross_branch_runtime",
+    "base": "preflight-task.v1.json",
+    "operation": "add",
+    "path": ["runtime"],
+    "value": {}
+  },
+  {
+    "case": "simulation_wrong_agent_collection",
+    "base": "simulation-task.v1.json",
+    "operation": "replace",
+    "path": ["parameter_snapshot", "agents", 2, "agent"],
+    "value": 2
+  },
+  {
+    "case": "preflight_uppercase_sha256",
+    "base": "preflight-task.v1.json",
+    "operation": "replace",
+    "path": ["dataset", "sha256"],
+    "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  },
+  {
+    "case": "preflight_path_escape",
+    "base": "preflight-task.v1.json",
+    "operation": "replace",
+    "path": ["output", "relative_tmp_directory"],
+    "value": "datasets/ds_fixture_001/preflight/tmp/../escaped"
+  }
+]

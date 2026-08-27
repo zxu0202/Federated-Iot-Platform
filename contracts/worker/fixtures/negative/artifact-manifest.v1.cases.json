@@ -1,0 +1,30 @@
+[
+  {
+    "case": "missing_required_artifact",
+    "operation": "remove_item",
+    "name": "diagnostics.json"
+  },
+  {
+    "case": "duplicate_artifact_name",
+    "operation": "duplicate_item",
+    "name": "results_agent_1.csv"
+  },
+  {
+    "case": "self_referential_manifest",
+    "operation": "replace",
+    "path": ["items", 0, "name"],
+    "value": "artifact_manifest.json"
+  },
+  {
+    "case": "uppercase_item_sha256",
+    "operation": "replace",
+    "path": ["items", 0, "sha256"],
+    "value": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+  },
+  {
+    "case": "item_path_escape",
+    "operation": "replace",
+    "path": ["items", 0, "name"],
+    "value": "charts/../../outside.json"
+  }
+]

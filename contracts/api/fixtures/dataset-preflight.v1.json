@@ -1,0 +1,25 @@
+{
+  "fixture_version": "dataset-preflight.v1",
+  "dataset": {
+    "dataset_id": "ds_fixture_preflight",
+    "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "status_before": "VALIDATING"
+  },
+  "worker_task": {
+    "contract_version": "worker.task.v1",
+    "job_id": "job_fixture_preflight",
+    "job_type": "DATASET_PREFLIGHT",
+    "run_id": null,
+    "dataset": {"dataset_id": "ds_fixture_preflight", "relative_path": "datasets/ds_fixture_preflight/source.csv", "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef", "timezone": "Asia/Shanghai"},
+    "preprocessing": {"contract_version": "preprocessing.v1", "field_standard_configuration_sha256": "field-standard-not-configured"},
+    "output": {"relative_tmp_directory": "datasets/ds_fixture_preflight/preflight/tmp/attempt_fixture", "required_summary_schema": "dataset-preflight.summary.v1"},
+    "limits": {"memory_bytes": 10737418240, "cancel_check_target_ms": 5000}
+  },
+  "completion": {
+    "input_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "summary_sha256": "abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+    "expected_dataset_status": "VALID",
+    "expected_job_status": "COMPLETED"
+  },
+  "failure": {"error_code": "INSUFFICIENT_SAMPLES", "expected_dataset_status": "INVALID", "expected_stable_code": "PREFLIGHT_FAILED"}
+}

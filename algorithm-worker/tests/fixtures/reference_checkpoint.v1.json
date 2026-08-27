@@ -1,0 +1,30 @@
+{
+  "fixture_version": "frozen-oracle.v1",
+  "evidence_only": true,
+  "random_stream": {
+    "seed": 2026,
+    "uniform": [
+      0.21934563492692294,
+      0.4130117368786672,
+      0.9766354781603012,
+      0.08889902164812924
+    ]
+  },
+  "rounding": {
+    "inputs": [-1.5, -1.49, 1.49, 1.5],
+    "outputs": [-2, -1, 1, 2]
+  },
+  "local_gp": {
+    "training": [[0.0], [1.0], [2.0]],
+    "targets": [0.0, 1.0, 4.0],
+    "k_neighbors": 3,
+    "length_scale": 1.5,
+    "signal_scale": 1.0,
+    "noise_scale": 0.1,
+    "regularization": 0.01,
+    "queries": [[0.5], [1.5]],
+    "means": [0.2078481083001218, 2.474909554470644],
+    "stddevs": [0.13679202064235638, 0.13679202064235557]
+  },
+  "tolerance": 1e-12
+}

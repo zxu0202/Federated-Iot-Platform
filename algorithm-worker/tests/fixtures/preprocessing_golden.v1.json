@@ -1,0 +1,17 @@
+{
+  "fixture_version": "preprocessing-golden.v1",
+  "expected_counts": {
+    "raw_rows": 38,
+    "invalid_numeric_rows": 0,
+    "stop_rows": 1,
+    "suspicious_rows": 2,
+    "running_rows": 35,
+    "spike_rows": 3
+  },
+  "expected_filter_path": {
+    "median": "median_filter_zero_padded_v1",
+    "smoothing": "zero_phase_fir_v1"
+  },
+  "expected_feature_dimension_at_n_lag_8": 64,
+  "tolerance": 1e-08
+}

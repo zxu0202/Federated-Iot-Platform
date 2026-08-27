@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=65"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "federated-iot-algorithm-worker"
+version = "1.0.0.dev1"
+description = "S1 Algorithm Worker preprocessing and deterministic numerical runtime"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy==2.1.3",
+    "psycopg==3.3.4",
+    "psycopg-binary==3.3.4",
+    "typing-extensions==4.16.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

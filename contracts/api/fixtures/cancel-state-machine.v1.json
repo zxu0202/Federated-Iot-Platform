@@ -1,0 +1,12 @@
+{
+  "fixture_version": "simulation-cancel.v1",
+  "run_id": "run_fixture_cancel",
+  "transitions": [
+    {"from": "QUEUED", "action": "POST /simulations/{run_id}/cancel", "to": "CANCELLED", "http_status": 200, "worker_job_status": "CANCELLED", "artifact_state": "INCOMPLETE"},
+    {"from": "RUNNING", "action": "POST /simulations/{run_id}/cancel", "to": "CANCELLING", "http_status": 202, "worker_job_status": "CANCELLING", "cancel_intent_persisted": true},
+    {"from": "CANCELLING", "action": "worker_confirm_cancel", "to": "CANCELLED", "worker_job_status": "CANCELLED", "artifact_state": "INCOMPLETE"},
+    {"from": "CANCELLED", "action": "POST /simulations/{run_id}/cancel", "to": "CANCELLED", "http_status": 200, "idempotent": true},
+    {"from": "COMPLETED", "action": "POST /simulations/{run_id}/cancel", "http_status": 409, "error_code": "RUN_NOT_CANCELLABLE"}
+  ],
+  "forbidden": ["CANCELLING to COMPLETED", "CANCELLED to RUNNING", "queued cancellation with a surviving queued Worker job"]
+}

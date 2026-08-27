@@ -1,0 +1,7 @@
+{
+  "fixture_version": "worker-lease.v1",
+  "claim": {"job_id": "job_fixture_simulation", "attempt_id": "attempt_fixture_1", "lease_token": "lease_token_example_not_a_credential", "lease_seconds": 60, "expected_status": "RUNNING"},
+  "heartbeat": {"after_seconds": 10, "expected_accepted": true, "lease_extension_seconds": 60},
+  "stale_attempt": {"attempt_id": "attempt_fixture_0", "lease_token": "lease_token_example_stale", "report_stage_expected_accepted": false, "complete_expected_accepted": false},
+  "expired": {"after_seconds": 61, "recovery_action": "RecoverExpiredLeases", "expected_job_status": "FAILED_RECOVERABLE", "expected_simulation_status": "FAILED_RECOVERABLE", "expected_error_code": "LEASE_LOST"}
+}
