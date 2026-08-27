@@ -1,0 +1,33 @@
+.env
+.runtime.env
+.env.*
+!.env.example
+.[cC][oO][dD][eE][xX]/
+secrets/
+backups/
+release/
+package-output/
+offline/package/output/
+offline/package/staging/
+
+# Generated local release evidence is not public-source material.
+release-evidence/local-*.json
+release-evidence/m1-local-*.json
+release-evidence/*-compose-smoke.json
+release-evidence/*-deployment-check.json
+release-evidence/*machine*.json
+release-evidence/*host*.json
+release-evidence/*.local.json
+
+# Local image exports, archives, caches, and operator logs remain local.
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.oci
+*.oci.tar
+*.log
+logs/
+tmp/
+temp/
+cache/

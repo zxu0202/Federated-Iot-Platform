@@ -1,0 +1,46 @@
+# Go build and test output
+/web-api
+/web-api.exe
+/*.test
+/*.out
+/coverage.out
+/coverage-*.txt
+/tmp/
+
+# Local runtime state and generated data
+/data/
+/datasets/
+/artifacts/
+/runs/
+/logs/
+/*.log
+/*.pid
+/*.dump
+/*.sql.gz
+
+# Local configuration and credentials. Keep the reviewed template only.
+/.env
+/.env.*
+!/.env.example
+/.pgpass
+/secrets/
+/credentials/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Local IDE state
+/.idea/
+/.vscode/
+/.fleet/
+/*.code-workspace
+/.project
+/.classpath
+
+# Local-only evidence and operating-system files
+/PAUSE_CHECKPOINT.md
+/evidence/
+/reports/
+.DS_Store
+Thumbs.db

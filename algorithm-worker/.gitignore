@@ -1,0 +1,73 @@
+# Python bytecode and test/type-checker caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Local Python environments and package-manager state
+.venv/
+venv/
+env/
+.tox/
+.nox/
+.eggs/
+*.egg-info/
+pip-wheel-metadata/
+
+# Packaging outputs. The lock and checksum manifest remain auditable source
+# inputs; the locally provisioned wheel binaries are never source artifacts.
+build/
+dist/
+*.whl
+wheelhouse/*
+!wheelhouse/SHA256SUMS
+!wheelhouse/.gitkeep
+
+# Attempt-local runtime state and generated outputs
+run/
+runs/
+tmp/
+temp/
+results/
+artifacts/
+output/
+outputs/
+data/
+datasets/
+uploads/
+exports/
+logs/
+*.log
+
+# Local configuration, credentials, and private keys
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+*.cer
+*.secret
+*_secret*
+
+# Editor, assistant, and operating-system state
+.idea/
+.vscode/
+.cursor/
+.agents/
+.claude/
+*.code-workspace
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

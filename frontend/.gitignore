@@ -1,0 +1,41 @@
+# Generated browser output and local dependency state
+dist/
+node_modules/
+.npm-cache/
+.tmp-verify/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+npm-debug.log*
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+secrets/
+credentials/
+
+# Editor, local tooling, and operating-system state
+.idea/
+.vscode/
+.cursor/
+.[c]odex/
+.claude/
+.continue/
+*.code-workspace
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
