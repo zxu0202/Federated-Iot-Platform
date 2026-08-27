@@ -1,0 +1,265 @@
+name: federated-iot-platform
+
+services:
+  postgres:
+    image: "${POSTGRES_IMAGE:?POSTGRES_IMAGE must be a release-frozen digest reference}"
+    pull_policy: never
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:-federated_iot}"
+      POSTGRES_USER: "${POSTGRES_ADMIN_USER:-platform_admin}"
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_admin_password
+      WEB_API_DB_USER: "${WEB_API_DB_USER:-web_api}"
+      WEB_API_DB_PASSWORD_FILE: /run/secrets/web_api_db_password
+      MIGRATOR_DB_USER: "${MIGRATOR_DB_USER:-platform_migrator}"
+      MIGRATOR_DB_PASSWORD_FILE: /run/secrets/migrator_db_password
+      WORKER_REPOSITORY_OWNER: "${WORKER_REPOSITORY_OWNER:-platform_worker_repository_owner}"
+      WORKER_DB_USER: "${WORKER_DB_USER:-algorithm_worker}"
+      WORKER_DB_PASSWORD_FILE: /run/secrets/worker_db_password
+      TZ: "${TZ:-Asia/Shanghai}"
+    command:
+      - postgres
+      - -c
+      - max_connections=64
+      - -c
+      - log_connections=off
+      - -c
+      - log_disconnections=off
+      - -c
+      - log_line_prefix=%m [%p] %u@%d
+    volumes:
+      - postgres-data:/var/lib/postgresql
+      - type: bind
+        source: ./postgres/init/010-create-service-roles.sh
+        target: /docker-entrypoint-initdb.d/010-create-service-roles.sh
+        read_only: true
+    secrets:
+      - postgres_admin_password
+      - web_api_db_password
+      - migrator_db_password
+      - worker_db_password
+    networks:
+      - iot_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\" && test -f \"$$PGDATA/.platform_roles_initialized\""]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    stop_grace_period: 30s
+    cpus: "${POSTGRES_CPU_LIMIT:-0.5}"
+    mem_limit: "${POSTGRES_MEMORY_LIMIT:-768m}"
+    pids_limit: "${POSTGRES_PIDS_LIMIT:-256}"
+    logging:
+      driver: local
+      options:
+        max-size: "${LOG_MAX_SIZE:-20m}"
+        max-file: "${LOG_MAX_FILE:-5}"
+
+  migration:
+    image: "${WEB_API_IMAGE:?WEB_API_IMAGE is required}"
+    pull_policy: never
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["migrate", "up"]
+    environment:
+      TZ: "${TZ:-Asia/Shanghai}"
+      IOT_MIGRATION_DATABASE_HOST: postgres
+      IOT_MIGRATION_DATABASE_PORT: "5432"
+      IOT_MIGRATION_DATABASE_NAME: "${POSTGRES_DB:-federated_iot}"
+      IOT_MIGRATION_DATABASE_USER: "${MIGRATOR_DB_USER:-platform_migrator}"
+      IOT_MIGRATION_DATABASE_PASSWORD_FILE: /run/secrets/migrator_db_password
+      IOT_MIGRATION_DATABASE_SSLMODE: disable
+    secrets:
+      - migrator_db_password
+    networks:
+      - iot_internal
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 30s
+    cpus: "${MIGRATION_CPU_LIMIT:-0.25}"
+    mem_limit: "${MIGRATION_MEMORY_LIMIT:-256m}"
+    pids_limit: "${MIGRATION_PIDS_LIMIT:-128}"
+    logging:
+      driver: local
+      options:
+        max-size: "${LOG_MAX_SIZE:-20m}"
+        max-file: "${LOG_MAX_FILE:-5}"
+
+  web-api:
+    image: "${WEB_API_IMAGE:?WEB_API_IMAGE is required}"
+    pull_policy: never
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.web-api
+      args:
+        GO_BUILDER_IMAGE: "${GO_BUILDER_IMAGE:?GO_BUILDER_IMAGE must be a release-frozen digest reference}"
+        NODE_BUILDER_IMAGE: "${NODE_BUILDER_IMAGE:?NODE_BUILDER_IMAGE must be a release-frozen digest reference}"
+        WEB_RUNTIME_IMAGE: "${WEB_RUNTIME_IMAGE:?WEB_RUNTIME_IMAGE must be a release-frozen digest reference}"
+        BUILD_VERSION: "${BUILD_VERSION:-0.0.0-m1}"
+        BACKEND_VERSION: "${BACKEND_VERSION:?BACKEND_VERSION is required}"
+        FRONTEND_VERSION: "${FRONTEND_VERSION:?FRONTEND_VERSION is required}"
+        VCS_REF: "${VCS_REF:-unknown}"
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+    environment:
+      TZ: "${TZ:-Asia/Shanghai}"
+      PLATFORM_CONFIG_PATH: /etc/federated-iot/platform.yaml
+      IOT_HTTP_ADDRESS: 0.0.0.0:8080
+      IOT_DATABASE_HOST: postgres
+      IOT_DATABASE_PORT: "5432"
+      IOT_DATABASE_NAME: "${POSTGRES_DB:-federated_iot}"
+      IOT_DATABASE_USER: "${WEB_API_DB_USER:-web_api}"
+      IOT_DATABASE_PASSWORD_FILE: /run/secrets/web_api_db_password
+      IOT_DATABASE_SSLMODE: disable
+      IOT_DATASET_ROOT: /var/lib/iot/datasets
+      IOT_ARTIFACT_ROOT: /var/lib/iot
+      IOT_STATIC_ROOT: /opt/federated-iot/spa
+      IOT_SERVICE_VERSION: "${BACKEND_VERSION:?BACKEND_VERSION is required}"
+      IOT_ALGORITHM_VERSION: "${ALGORITHM_VERSION:?ALGORITHM_VERSION is required}"
+      IOT_WORKER_VERSION: "${WORKER_VERSION:?WORKER_VERSION is required}"
+      IOT_WORKER_IMAGE_DIGEST: "${WORKER_IMAGE_DIGEST:?WORKER_IMAGE_DIGEST is required}"
+      IOT_NUMERIC_RUNTIME: "${NUMERIC_RUNTIME:-python-3.12.12}"
+      IOT_PARAMETER_CONSTRAINTS_FILE: /etc/federated-iot/parameter-constraints.v1.json
+    volumes:
+      - datasets:/var/lib/iot/datasets
+      - artifacts:/var/lib/iot/runs:ro
+      - type: bind
+        source: "${PLATFORM_CONFIG_PATH:?PLATFORM_CONFIG_PATH must point to platform.yaml}"
+        target: /etc/federated-iot/platform.yaml
+        read_only: true
+      - type: bind
+        source: "${PARAMETER_CONSTRAINTS_SOURCE:?PARAMETER_CONSTRAINTS_SOURCE must point to parameter-constraints.v1.json}"
+        target: /etc/federated-iot/parameter-constraints.v1.json
+        read_only: true
+    secrets:
+      - web_api_db_password
+    networks:
+      - iot_edge
+      - iot_internal
+    ports:
+      - "${PLATFORM_BIND_ADDRESS:-0.0.0.0}:${HOST_API_PORT:-8080}:8080"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/web-api", "healthcheck", "--kind=live", "--config", "/etc/federated-iot/platform.yaml"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    stop_grace_period: 30s
+    cpus: "${WEB_API_CPU_LIMIT:-0.5}"
+    mem_limit: "${WEB_API_MEMORY_LIMIT:-512m}"
+    pids_limit: "${WEB_API_PIDS_LIMIT:-256}"
+    logging:
+      driver: local
+      options:
+        max-size: "${LOG_MAX_SIZE:-20m}"
+        max-file: "${LOG_MAX_FILE:-5}"
+
+  algorithm-worker:
+    image: "${ALGORITHM_WORKER_IMAGE:?ALGORITHM_WORKER_IMAGE is required}"
+    pull_policy: never
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.algorithm-worker
+      args:
+        PYTHON_BUILDER_IMAGE: "${PYTHON_BUILDER_IMAGE:?PYTHON_BUILDER_IMAGE must be a release-frozen digest reference}"
+        PYTHON_RUNTIME_IMAGE: "${PYTHON_RUNTIME_IMAGE:?PYTHON_RUNTIME_IMAGE must be a release-frozen digest reference}"
+        BUILD_VERSION: "${BUILD_VERSION:-0.0.0-m1}"
+        ALGORITHM_VERSION: "${ALGORITHM_VERSION:?ALGORITHM_VERSION is required}"
+        WORKER_VERSION: "${WORKER_VERSION:?WORKER_VERSION is required}"
+        PYTHON_PACKAGE_VERSION: "${PYTHON_PACKAGE_VERSION:?PYTHON_PACKAGE_VERSION is required}"
+        VCS_REF: "${VCS_REF:-unknown}"
+    restart: unless-stopped
+    deploy:
+      replicas: 1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migration:
+        condition: service_completed_successfully
+      web-api:
+        condition: service_healthy
+    environment:
+      TZ: "${TZ:-Asia/Shanghai}"
+      PLATFORM_CONFIG_PATH: /etc/federated-iot/platform.yaml
+      OMP_NUM_THREADS: "${WORKER_NUMERIC_THREADS:-2}"
+      OPENBLAS_NUM_THREADS: "${WORKER_NUMERIC_THREADS:-2}"
+      MKL_NUM_THREADS: "${WORKER_NUMERIC_THREADS:-2}"
+      NUMEXPR_MAX_THREADS: "${WORKER_NUMERIC_THREADS:-2}"
+      WORKER_POOL_CAPACITY: "1"
+      IOT_WORKER_VERSION: "${WORKER_VERSION:?WORKER_VERSION is required}"
+      WORKER_INSTANCE_ID: "${WORKER_INSTANCE_ID:-algorithm-worker-1}"
+    volumes:
+      # The volume is writable so the Worker can atomically publish preflight
+      # summaries under pre-created attempt directories. Dataset filesystem ACLs
+      # keep source.csv immutable to the Worker.
+      - datasets:/var/lib/iot/datasets
+      - artifacts:/var/lib/iot/runs
+      - type: bind
+        source: "${PLATFORM_CONFIG_PATH:?PLATFORM_CONFIG_PATH must point to platform.yaml}"
+        target: /etc/federated-iot/platform.yaml
+        read_only: true
+    secrets:
+      - worker_db_password
+    networks:
+      - iot_internal
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "python", "-m", "federated_iot_worker.healthcheck", "--config", "/etc/federated-iot/platform.yaml", "--max-heartbeat-age-seconds", "30"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 45s
+    stop_grace_period: 30s
+    cpus: "${WORKER_CPU_LIMIT:-2.0}"
+    mem_limit: "${WORKER_MEMORY_LIMIT:-1536m}"
+    pids_limit: "${WORKER_PIDS_LIMIT:-512}"
+    logging:
+      driver: local
+      options:
+        max-size: "${LOG_MAX_SIZE:-20m}"
+        max-file: "${LOG_MAX_FILE:-5}"
+
+networks:
+  iot_edge:
+  iot_internal:
+    internal: true
+
+volumes:
+  postgres-data:
+  datasets:
+  artifacts:
+
+secrets:
+  postgres_admin_password:
+    file: "${POSTGRES_ADMIN_PASSWORD_SOURCE:?POSTGRES_ADMIN_PASSWORD_SOURCE must point to a secret file}"
+  web_api_db_password:
+    file: "${WEB_API_DB_PASSWORD_SOURCE:?WEB_API_DB_PASSWORD_SOURCE must point to a secret file}"
+  migrator_db_password:
+    file: "${MIGRATOR_DB_PASSWORD_SOURCE:?MIGRATOR_DB_PASSWORD_SOURCE must point to a secret file}"
+  worker_db_password:
+    file: "${WORKER_DB_PASSWORD_SOURCE:?WORKER_DB_PASSWORD_SOURCE must point to a secret file}"

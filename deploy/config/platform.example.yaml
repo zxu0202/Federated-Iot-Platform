@@ -1,0 +1,86 @@
+# Copy to platform.yaml for a deployment. Values in this file are part of the
+# task snapshot configuration surface and must be versioned by the deployment operator.
+config_version: platform-config.v1
+
+platform:
+  brand: zx/federated-iot-platform:latest
+  environment: controlled-local
+  timezone: Asia/Shanghai
+
+database:
+  profile: postgres
+  # Inter-container service DNS on iot_internal; never use 127.0.0.1 here.
+  host: postgres
+  port: 5432
+  name: federated_iot
+  web_api_username: web_api
+  worker_username: algorithm_worker
+  web_api_password_file: /run/secrets/web_api_db_password
+  worker_password_file: /run/secrets/worker_db_password
+  connect_timeout_seconds: 10
+  max_open_connections: 24
+  max_idle_connections: 8
+
+network:
+  container_listen_address: 0.0.0.0
+  container_port: 8080
+  host_binding:
+    # Compose publishes all host IPv4 interfaces by default. An operator may
+    # explicitly restrict the host mapping through the deployment environment.
+    selection: all_interfaces
+    candidate_interfaces: []
+    explicit_interface: null
+    explicit_address: null
+  hostname: null
+  public_base_url: null
+  allowed_hosts: []
+
+field_standards:
+  configuration_version: field-standard.v1
+  zl:
+    standard_reference: null
+    unit_symbol: null
+    minimum: null
+    maximum: null
+    validation_enabled: false
+  sd:
+    standard_reference: null
+    unit_symbol: null
+    minimum: null
+    maximum: null
+    validation_enabled: false
+  sampling:
+    expected_period_ms: null
+    tolerance_ms: null
+
+storage:
+  dataset_root: /var/lib/iot/datasets
+  artifact_root: /var/lib/iot/runs
+  minimum_free_bytes: 2147483648
+  require_atomic_rename: true
+
+limits:
+  upload_max_bytes: 524288000
+  simulation_running_slots: 1
+  simulation_waiting_slots: 10
+  preflight_waiting_slots: 4
+  worker_pool_capacity: 1
+  sse_event_retention_per_run: 2000
+  sse_max_connections: 16
+  sse_heartbeat_seconds: 15
+  worker_poll_interval_ms: 2000
+  worker_lease_seconds: 60
+  worker_heartbeat_seconds: 10
+  worker_cancel_check_target_ms: 5000
+  worker_memory_bytes: 1342177280
+  numeric_library_threads: 2
+  download_buffer_bytes: 1048576
+  log_buffer_records: 1000
+
+logging:
+  level: INFO
+  format: json
+  output: stdout
+  include_raw_rows: false
+  include_host_paths: false
+  include_credentials: false

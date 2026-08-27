@@ -1,0 +1,161 @@
+# This file is intentionally incomplete during M1. It is the release-freeze gate,
+# not an image source. Populate it only from independently verified registry data.
+schema_version: deploy-image-lock.v1
+release:
+  status: release-freeze-required
+  blocked_reason: >-
+    Docker Desktop passed the current-device functional readiness profile and
+    local linux/amd64 1.0.0-m1 application images, local SBOMs, offline
+    packages, and isolated package smoke checks passed. Immutable registry
+    release references, linux/arm64 application builds, externally scoped
+    Compose evidence, and human external-release authorization remain open.
+  brand: zx/federated-iot-platform:latest
+  version_baseline:
+    platform: 1.0.0-m1
+    frontend: 1.0.0-m1
+    backend: 1.0.0-m1
+    algorithm: 1.0.0-m1
+    algorithm_worker: 1.0.0-m1
+  target_platforms:
+    - linux/amd64
+    - linux/arm64
+images:
+  postgres:
+    required_reference: docker.io/library/postgres:18.6-bookworm@sha256:7d2695c3aa88e792e8b3b233e7e4adb296a20412c6c0ca361e3edaaacfada108
+    exact_version: "18.6"
+    variant: bookworm
+    manifest_list_digest: sha256:7d2695c3aa88e792e8b3b233e7e4adb296a20412c6c0ca361e3edaaacfada108
+    platform_digests:
+      linux/amd64: sha256:b939b3851e2cccb017dc4497af63b15e34efa57fba036548773c53b2f16a8871
+      linux/arm64: sha256:adf351d88fad28c72c08456f8914e8a3d17294c9d579017fa2106e72c29e53c5
+    linux_arm64_variant: v8
+    created_date: "2026-08-13"
+    source_revision: e00e1bd34ec5c8a8e7ad89b273b3d42efaf6d5bc
+    evidence: deploy/release-evidence/postgres-18.6-bookworm.oci-index.json
+    transport_mirror: m.daocloud.io/docker.io/library/postgres:18.6-bookworm
+  go_builder:
+    required_reference: docker.io/library/golang:1.23.0-bookworm@sha256:32096e84705b30bb39cc9c65ef2896efacc4268203b7876049847763cefc934d
+    exact_version: "1.23.0"
+    variant: bookworm
+    manifest_list_digest: sha256:32096e84705b30bb39cc9c65ef2896efacc4268203b7876049847763cefc934d
+    platform_digests:
+      linux/amd64: sha256:ff787165114376423b784ea19442b4a7988c58789f3aa97560f57f0aea87460e
+      linux/arm64: sha256:7f883b9450b3678cd021ae1efa1576bf11f21510ac313df8d457534e562a4b46
+    required_go_version: "1.23.0"
+    evidence: deploy/release-evidence/base-images.oci-indexes.json
+    transport_mirror: m.daocloud.io/docker.io/library/golang:1.23.0-bookworm
+  node_builder:
+    required_reference: docker.io/library/node:14.18.0-bullseye@sha256:7816ee1e305841a4e551933e21b3d79727b8e0645a03186b75be7089f010cfbc
+    exact_version: "14.18.0"
+    variant: bullseye
+    manifest_list_digest: sha256:7816ee1e305841a4e551933e21b3d79727b8e0645a03186b75be7089f010cfbc
+    platform_digests:
+      linux/amd64: sha256:ba0d751e941a877e12f51da7fa622a86528199d602993d843320a04875a05eeb
+      linux/arm64: sha256:ea3e0b4d2b8c27afd78bbb38edb3772d996837929d9d98025f7727c93ac5b42d
+    linux_arm64_variant: v8
+    evidence: deploy/release-evidence/base-images.oci-indexes.json
+    transport_mirror: m.daocloud.io/docker.io/library/node:14.18.0-bullseye
+  web_runtime:
+    required_reference: docker.io/library/debian:12.12-slim@sha256:d5d3f9c23164ea16f31852f95bd5959aad1c5e854332fe00f7b3a20fcc9f635c
+    exact_version: "12.12"
+    variant: slim
+    manifest_list_digest: sha256:d5d3f9c23164ea16f31852f95bd5959aad1c5e854332fe00f7b3a20fcc9f635c
+    platform_digests:
+      linux/amd64: sha256:a1363ada3b45cb3ebc74c78943558f8b0c2b59aaa194d8224e1b02cfd5d78583
+      linux/arm64: sha256:cb7b1727683aabf9d631a6a423091ed381058ec51be0f073974c69eaa48835cc
+    evidence: deploy/release-evidence/base-images.oci-indexes.json
+    transport_mirror: m.daocloud.io/docker.io/library/debian:12.12-slim
+  python_builder:
+    required_reference: docker.io/library/python:3.12.12-bookworm@sha256:c0abd0758831ad99b7a29e0c1a875da9c4abb9a2e3f21e2eeb585dbcadfb6cd0
+    exact_version: "3.12.12"
+    variant: bookworm
+    manifest_list_digest: sha256:c0abd0758831ad99b7a29e0c1a875da9c4abb9a2e3f21e2eeb585dbcadfb6cd0
+    platform_digests:
+      linux/amd64: sha256:6760942332f453ec141ea470fa3bfb790e84e11edcf0b6331b98bee6091a7b69
+      linux/arm64: sha256:9cd1716117b9a1366c11a9d56de56a41058744c85c0caaddc427fec7f9f4e61f
+    evidence: deploy/release-evidence/base-images.oci-indexes.json
+    transport_mirror: m.daocloud.io/docker.io/library/python:3.12.12-bookworm
+  python_runtime:
+    required_reference: docker.io/library/python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c
+    exact_version: "3.12.12"
+    variant: slim-bookworm
+    manifest_list_digest: sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c
+    platform_digests:
+      linux/amd64: sha256:2986c55feb36e6cae00fa1fefb454283e4b33f35e75ff8bdd123b134130be301
+      linux/arm64: sha256:228390eced221ad2986a3dd77e10b1accca6ba8ceb36f1572de1b346a337cc1a
+    evidence: deploy/release-evidence/base-images.oci-indexes.json
+    transport_mirror: m.daocloud.io/docker.io/library/python:3.12.12-slim-bookworm
+application_images:
+  web_api:
+    component_versions:
+      frontend: 1.0.0-m1
+      backend: 1.0.0-m1
+    local_candidate_reference: zx/federated-iot-platform:1.0.0-m1
+    local_image_id: sha256:b39134e5d418af01e7e84db63e30d0456b5dca5fb74e696c3c4c81339588eb4b
+    local_platform: linux/amd64
+    local_status: local-package-validated
+    release_reference: null
+    source_revision: m1-r33-web-focused-closure-local
+    sbom_sha256: 819a1e22b9013227074fbf20e2963f685e6fa74ddae9c93651fd863d42b0d8aa
+  algorithm_worker:
+    component_versions:
+      algorithm: 1.0.0-m1
+      worker: 1.0.0-m1
+      python_package: 1.0.0.dev1
+    local_candidate_reference: zx/federated-iot-platform-worker:1.0.0-m1
+    local_image_id: sha256:09e53c3ebcf2c319892bcb8ccea2230db32a69392bd00c875378533f79f15d3d
+    local_platform: linux/amd64
+    local_status: local-package-validated
+    release_reference: null
+    source_revision: m1-r32-worker-release-candidate-local
+    sbom_sha256: bfcae77ffdd8eef6a0b0922e925072f35cdb663cc1c5d4c1daf38482958d1b03
+toolchains:
+  go:
+    exact_version: 1.23.0
+    required_environment:
+      GOTOOLCHAIN: local
+      GOPROXY: off
+      GOSUMDB: off
+    host_validation: release-freeze-required
+offline_build_inputs:
+  backend_go_1_23_0:
+    status: checksum-verified-locally
+    go_mod_sha256: 534464893e35693a3dd1af8c7a9efa1f0da78ffcab580d3f8b64aa682e131d01
+    go_sum_sha256: 91f1a749534aa3796620eb4234076b9ccd74932dd428e51b5a2372dbff254eeb
+    vendor_modules_sha256: b523226eb1eed73d5a7cc03a2468053866389b34c041a25412f71bffd97d6ad9
+    vendor_tree_scheme: sha256-of-sorted-file-sha256-lines-v1
+    vendor_tree_sha256: f5538160c71b023f5923bad2bbc2fa7944b0932b4eade3add4a13b2cc8d74143
+    dependency_sbom: deploy/sbom/backend-go-1.23.0.cdx.json
+    dependency_sbom_sha256: 9331daf643ab5b306b672fe2f88aa4a09d6fab509d882a1c98d3d6d3c17819fa
+local_package_preparation:
+  release_id: v1.0.0-m1
+  status: prepared-and-validated-local-only
+  package_archive_gate: closed-local-only
+  external_publication: not-authorized
+  target_platform: linux/amd64
+  validations:
+    package_manifest_and_checksums: pass
+    package_protection: pass
+    image_archive_content_without_test_data: pass
+    offline_restore_preflight: pass
+    isolated_restore_smoke: pass
+  images:
+    postgres_sbom_sha256: 0103157e36f0c2fd28e27c1ff621db00a6709634c323599ece444c2cefec48ac
+    web_api_sbom_sha256: 819a1e22b9013227074fbf20e2963f685e6fa74ddae9c93651fd863d42b0d8aa
+    algorithm_worker_sbom_sha256: bfcae77ffdd8eef6a0b0922e925072f35cdb663cc1c5d4c1daf38482958d1b03
+  dockerhub_package:
+    path: deploy/release/dockerhub/v1.0.0-m1
+    file_count: 38
+    size_bytes: 271140313
+    tree_sha256: c864b6e2911374d764a960a1738a7e5aa20d1f0307414bdb75e7303c59035fe7
+    release_manifest_sha256: a22c781d64871ba28833aca3534f82dc01f25a7a6f1efd1b82585c52fc948db2
+    inventory_sha256: e155984a253f4764570236820bb377bdad83c79a1b6c54e62634f891c922f68d
+    checksums_sha256: 17fa242265cb5db4efa731a3a9ca53c4e0d830eebd61ab09deb542c0f9631d2a
+  zenodo_package:
+    path: deploy/release/zenodo/v1.0.0-m1
+    file_count: 38
+    size_bytes: 271140310
+    tree_sha256: 678096f419fbf9bc27d091b0746d5c46e80f299aa92811b0913f3bb7bb0ecc44
+    release_manifest_sha256: a22c781d64871ba28833aca3534f82dc01f25a7a6f1efd1b82585c52fc948db2
+    inventory_sha256: 3d9422db38a6d2baa60cd334ab2e0018be742e7eb2b97e2313ebebe2674ef900
+    checksums_sha256: 9455fbb1a76f1087711fd9e243baf77513c219149d1b1e5641abe6d36ac6f1bc

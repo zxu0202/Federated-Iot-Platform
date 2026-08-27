@@ -1,0 +1,86 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:6619d791-39b3-4b2f-9e95-b3b7df1ad003",
+  "version": 1,
+  "metadata": {
+    "component": {
+      "type": "application",
+      "name": "github.com/zx/federated-iot-platform/backend",
+      "version": "M1",
+      "properties": [
+        {
+          "name": "cdx:gomod:go.version",
+          "value": "1.23.0"
+        },
+        {
+          "name": "org.opencontainers.image.source",
+          "value": "code/backend/go.mod"
+        },
+        {
+          "name": "com.zx.supply-chain.checksum-source",
+          "value": "code/backend/go.sum"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "github.com/jackc/pgpassfile",
+      "version": "v1.0.0",
+      "purl": "pkg:golang/github.com/jackc/pgpassfile@v1.0.0"
+    },
+    {
+      "type": "library",
+      "name": "github.com/jackc/pgservicefile",
+      "version": "v0.0.0-20240606120523-5a60cdf6a761",
+      "purl": "pkg:golang/github.com/jackc/pgservicefile@v0.0.0-20240606120523-5a60cdf6a761"
+    },
+    {
+      "type": "library",
+      "name": "github.com/jackc/pgx/v5",
+      "version": "v5.7.2",
+      "purl": "pkg:golang/github.com/jackc/pgx/v5@v5.7.2"
+    },
+    {
+      "type": "library",
+      "name": "github.com/jackc/puddle/v2",
+      "version": "v2.2.2",
+      "purl": "pkg:golang/github.com/jackc/puddle/v2@v2.2.2"
+    },
+    {
+      "type": "library",
+      "name": "golang.org/x/crypto",
+      "version": "v0.31.0",
+      "purl": "pkg:golang/golang.org/x/crypto@v0.31.0"
+    },
+    {
+      "type": "library",
+      "name": "golang.org/x/sync",
+      "version": "v0.10.0",
+      "purl": "pkg:golang/golang.org/x/sync@v0.10.0"
+    },
+    {
+      "type": "library",
+      "name": "golang.org/x/text",
+      "version": "v0.21.0",
+      "purl": "pkg:golang/golang.org/x/text@v0.21.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:golang/github.com/zx/federated-iot-platform/backend@M1",
+      "dependsOn": [
+        "pkg:golang/github.com/jackc/pgpassfile@v1.0.0",
+        "pkg:golang/github.com/jackc/pgservicefile@v0.0.0-20240606120523-5a60cdf6a761",
+        "pkg:golang/github.com/jackc/pgx/v5@v5.7.2",
+        "pkg:golang/github.com/jackc/puddle/v2@v2.2.2",
+        "pkg:golang/golang.org/x/crypto@v0.31.0",
+        "pkg:golang/golang.org/x/sync@v0.10.0",
+        "pkg:golang/golang.org/x/text@v0.21.0"
+      ]
+    }
+  ]
+}

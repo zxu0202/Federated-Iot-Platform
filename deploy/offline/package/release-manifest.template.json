@@ -1,0 +1,56 @@
+{
+  "schema_version": "offline-release-manifest.v1",
+  "release": {
+    "release_id": "REPLACE_WITH_APPROVED_RELEASE_ID",
+    "status": "template-not-valid",
+    "source_revision": "REPLACE_WITH_APPROVED_SOURCE_REVISION",
+    "target_platform": "linux/amd64"
+  },
+  "distribution": {
+    "docker_hub": {
+      "mode": "human-manual-only",
+      "repository": "REPLACE_WITH_APPROVED_REPOSITORY"
+    },
+    "zenodo": {
+      "mode": "human-manual-only",
+      "deposit_id": null,
+      "doi": null
+    }
+  },
+  "images": [
+    {
+      "name": "postgres",
+      "release_reference": "REPLACE_WITH_IMAGE_AT_SHA256_REFERENCE",
+      "archive": "images/postgres.tar",
+      "archive_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+      "sbom": "sbom/REPLACE_WITH_SBOM_NAME.json",
+      "sbom_sha256": "REPLACE_WITH_64_LOWERCASE_HEX"
+    },
+    {
+      "name": "web-api",
+      "release_reference": "REPLACE_WITH_IMAGE_AT_SHA256_REFERENCE",
+      "archive": "images/web-api.tar",
+      "archive_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+      "sbom": "sbom/REPLACE_WITH_SBOM_NAME.json",
+      "sbom_sha256": "REPLACE_WITH_64_LOWERCASE_HEX"
+    },
+    {
+      "name": "algorithm-worker",
+      "release_reference": "REPLACE_WITH_IMAGE_AT_SHA256_REFERENCE",
+      "archive": "images/algorithm-worker.tar",
+      "archive_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+      "sbom": "sbom/REPLACE_WITH_SBOM_NAME.json",
+      "sbom_sha256": "REPLACE_WITH_64_LOWERCASE_HEX"
+    }
+  ],
+  "runtime": {
+    "compose": "runtime/compose.postgres.yaml",
+    "parameter_constraints_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+    "restore_validator": "validate/Validate-OfflinePackage.ps1"
+  },
+  "checksums": {
+    "algorithm": "sha256",
+    "manifest": "checksums/sha256sum.txt",
+    "inventory": "manifests/inventory.json"
+  }
+}

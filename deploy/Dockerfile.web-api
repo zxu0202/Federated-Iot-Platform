@@ -1,0 +1,52 @@
+# All FROM arguments are release-freeze inputs. They must be exact digest references.
+ARG GO_BUILDER_IMAGE
+ARG NODE_BUILDER_IMAGE
+ARG WEB_RUNTIME_IMAGE
+
+FROM ${GO_BUILDER_IMAGE} AS api-build
+WORKDIR /src/backend
+ENV GOTOOLCHAIN=local \
+    GOPROXY=off \
+    GOSUMDB=off
+RUN test "$(go env GOVERSION)" = "go1.23.0"
+COPY backend/go.mod backend/go.sum ./
+COPY backend/vendor ./vendor
+COPY backend/ ./
+ARG BUILD_VERSION
+ARG BACKEND_VERSION
+ARG VCS_REF
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=vendor -trimpath \
+    -ldflags="-s -w -X main.version=${BACKEND_VERSION} -X main.revision=${VCS_REF}" \
+    -o /out/web-api ./cmd/web-api
+
+FROM ${NODE_BUILDER_IMAGE} AS spa-build
+WORKDIR /src/frontend
+COPY frontend/package.json frontend/package-lock.json ./
+COPY frontend/.npm-cache ./npm-cache
+RUN npm ci --offline --ignore-scripts --cache ./npm-cache --registry=https://registry.npmmirror.com
+COPY frontend/ ./
+ARG FRONTEND_VERSION
+RUN node -e "if (require('./package.json').version !== '${FRONTEND_VERSION}') process.exit(1)"
+RUN npm run build
+
+FROM ${WEB_RUNTIME_IMAGE} AS runtime
+ARG BUILD_VERSION
+ARG BACKEND_VERSION
+ARG FRONTEND_VERSION
+ARG VCS_REF
+LABEL org.opencontainers.image.title="zx/federated-iot-platform" \
+      org.opencontainers.image.version="${BUILD_VERSION}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      com.zx.federated-iot.backend.version="${BACKEND_VERSION}" \
+      com.zx.federated-iot.frontend.version="${FRONTEND_VERSION}"
+RUN groupadd --system --gid 10000 platform \
+    && useradd --system --uid 10001 --gid platform --no-create-home --shell /usr/sbin/nologin webapi \
+    && install --directory --owner=webapi --group=platform --mode=0750 /var/lib/iot/datasets \
+    && install --directory --owner=webapi --group=platform --mode=0750 /var/lib/iot/runs \
+    && install --directory --owner=root --group=platform --mode=0750 /etc/federated-iot
+COPY --from=api-build /out/web-api /usr/local/bin/web-api
+COPY --from=spa-build /src/frontend/dist /opt/federated-iot/spa
+USER webapi:platform
+EXPOSE 8080
+ENTRYPOINT ["/usr/local/bin/web-api"]
+CMD ["serve"]

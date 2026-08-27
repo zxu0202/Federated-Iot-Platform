@@ -1,0 +1,30 @@
+{
+  "schema_version": "registry-oci-index-evidence.v1",
+  "image": {
+    "release_reference": "docker.io/library/postgres:18.6-bookworm@sha256:7d2695c3aa88e792e8b3b233e7e4adb296a20412c6c0ca361e3edaaacfada108",
+    "tag": "18.6-bookworm",
+    "index_digest": "sha256:7d2695c3aa88e792e8b3b233e7e4adb296a20412c6c0ca361e3edaaacfada108",
+    "created_date": "2026-08-13",
+    "source_revision": "e00e1bd34ec5c8a8e7ad89b273b3d42efaf6d5bc",
+    "platform_descriptors": [
+      {
+        "os": "linux",
+        "architecture": "amd64",
+        "digest": "sha256:b939b3851e2cccb017dc4497af63b15e34efa57fba036548773c53b2f16a8871"
+      },
+      {
+        "os": "linux",
+        "architecture": "arm64",
+        "variant": "v8",
+        "digest": "sha256:adf351d88fad28c72c08456f8914e8a3d17294c9d579017fa2106e72c29e53c5"
+      }
+    ]
+  },
+  "retrieval": {
+    "method": "OCI index metadata inspection",
+    "environment": "approved elevated environment",
+    "transport_reference": "m.daocloud.io/docker.io/library/postgres:18.6-bookworm",
+    "transport_role": "mirror only; not the release reference",
+    "layer_downloaded": false
+  }
+}

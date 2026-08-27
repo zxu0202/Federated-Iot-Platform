@@ -1,0 +1,62 @@
+{
+  "schema_version": "registry-oci-index-evidence.v1",
+  "retrieval": {
+    "method": "OCI index metadata inspection",
+    "environment": "approved elevated environment",
+    "transport_role": "mirror only; source references remain the release references",
+    "mirror_digest_equivalence_basis": "approved operator report of DaoCloud Docker Hub mirror behavior",
+    "layer_downloaded": false
+  },
+  "images": [
+    {
+      "release_lock_key": "go_builder",
+      "release_reference": "docker.io/library/golang:1.23.0-bookworm@sha256:32096e84705b30bb39cc9c65ef2896efacc4268203b7876049847763cefc934d",
+      "transport_reference": "m.daocloud.io/docker.io/library/golang:1.23.0-bookworm",
+      "index_digest": "sha256:32096e84705b30bb39cc9c65ef2896efacc4268203b7876049847763cefc934d",
+      "platform_descriptors": [
+        { "os": "linux", "architecture": "amd64", "digest": "sha256:ff787165114376423b784ea19442b4a7988c58789f3aa97560f57f0aea87460e" },
+        { "os": "linux", "architecture": "arm64", "digest": "sha256:7f883b9450b3678cd021ae1efa1576bf11f21510ac313df8d457534e562a4b46" }
+      ]
+    },
+    {
+      "release_lock_key": "node_builder",
+      "release_reference": "docker.io/library/node:14.18.0-bullseye@sha256:7816ee1e305841a4e551933e21b3d79727b8e0645a03186b75be7089f010cfbc",
+      "transport_reference": "m.daocloud.io/docker.io/library/node:14.18.0-bullseye",
+      "index_digest": "sha256:7816ee1e305841a4e551933e21b3d79727b8e0645a03186b75be7089f010cfbc",
+      "platform_descriptors": [
+        { "os": "linux", "architecture": "amd64", "digest": "sha256:ba0d751e941a877e12f51da7fa622a86528199d602993d843320a04875a05eeb" },
+        { "os": "linux", "architecture": "arm64", "variant": "v8", "digest": "sha256:ea3e0b4d2b8c27afd78bbb38edb3772d996837929d9d98025f7727c93ac5b42d" }
+      ]
+    },
+    {
+      "release_lock_key": "web_runtime",
+      "release_reference": "docker.io/library/debian:12.12-slim@sha256:d5d3f9c23164ea16f31852f95bd5959aad1c5e854332fe00f7b3a20fcc9f635c",
+      "transport_reference": "m.daocloud.io/docker.io/library/debian:12.12-slim",
+      "index_digest": "sha256:d5d3f9c23164ea16f31852f95bd5959aad1c5e854332fe00f7b3a20fcc9f635c",
+      "platform_descriptors": [
+        { "os": "linux", "architecture": "amd64", "digest": "sha256:a1363ada3b45cb3ebc74c78943558f8b0c2b59aaa194d8224e1b02cfd5d78583" },
+        { "os": "linux", "architecture": "arm64", "digest": "sha256:cb7b1727683aabf9d631a6a423091ed381058ec51be0f073974c69eaa48835cc" }
+      ]
+    },
+    {
+      "release_lock_key": "python_builder",
+      "release_reference": "docker.io/library/python:3.12.12-bookworm@sha256:c0abd0758831ad99b7a29e0c1a875da9c4abb9a2e3f21e2eeb585dbcadfb6cd0",
+      "transport_reference": "m.daocloud.io/docker.io/library/python:3.12.12-bookworm",
+      "index_digest": "sha256:c0abd0758831ad99b7a29e0c1a875da9c4abb9a2e3f21e2eeb585dbcadfb6cd0",
+      "platform_descriptors": [
+        { "os": "linux", "architecture": "amd64", "digest": "sha256:6760942332f453ec141ea470fa3bfb790e84e11edcf0b6331b98bee6091a7b69" },
+        { "os": "linux", "architecture": "arm64", "digest": "sha256:9cd1716117b9a1366c11a9d56de56a41058744c85c0caaddc427fec7f9f4e61f" }
+      ]
+    },
+    {
+      "release_lock_key": "python_runtime",
+      "release_reference": "docker.io/library/python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "transport_reference": "m.daocloud.io/docker.io/library/python:3.12.12-slim-bookworm",
+      "index_digest": "sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c",
+      "platform_descriptors": [
+        { "os": "linux", "architecture": "amd64", "digest": "sha256:2986c55feb36e6cae00fa1fefb454283e4b33f35e75ff8bdd123b134130be301" },
+        { "os": "linux", "architecture": "arm64", "digest": "sha256:228390eced221ad2986a3dd77e10b1accca6ba8ceb36f1572de1b346a337cc1a" }
+      ]
+    }
+  ]
+}

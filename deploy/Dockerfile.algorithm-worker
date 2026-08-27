@@ -1,0 +1,41 @@
+# All FROM arguments are release-freeze inputs. The wheelhouse is an offline build input.
+ARG PYTHON_BUILDER_IMAGE
+ARG PYTHON_RUNTIME_IMAGE
+
+FROM ${PYTHON_BUILDER_IMAGE} AS python-build
+WORKDIR /src/algorithm-worker
+COPY algorithm-worker/requirements.lock ./requirements.lock
+COPY algorithm-worker/wheelhouse ./wheelhouse
+RUN python -m venv /opt/venv \
+    && /opt/venv/bin/pip install --no-index --find-links=./wheelhouse --require-hashes -r requirements.lock
+COPY algorithm-worker/ ./
+ARG ALGORITHM_VERSION
+ARG WORKER_VERSION
+ARG PYTHON_PACKAGE_VERSION
+RUN python -c "import pathlib, tomllib; assert tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version'] == '${PYTHON_PACKAGE_VERSION}'" \
+    && PYTHONPATH=src python -c "from federated_iot_worker.version import ALGORITHM_VERSION; assert ALGORITHM_VERSION == '${ALGORITHM_VERSION}'"
+RUN /opt/venv/bin/python -m compileall -q src
+
+FROM ${PYTHON_RUNTIME_IMAGE} AS runtime
+ARG BUILD_VERSION
+ARG ALGORITHM_VERSION
+ARG WORKER_VERSION
+ARG VCS_REF
+LABEL org.opencontainers.image.title="zx/federated-iot-platform-worker" \
+      org.opencontainers.image.version="${BUILD_VERSION}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      com.zx.federated-iot.algorithm.version="${ALGORITHM_VERSION}" \
+      com.zx.federated-iot.worker.version="${WORKER_VERSION}"
+RUN groupadd --system --gid 10000 platform \
+    && useradd --system --uid 10002 --gid platform --no-create-home --shell /usr/sbin/nologin worker \
+    && install --directory --owner=worker --group=platform --mode=0770 /var/lib/iot/runs \
+    && install --directory --owner=root --group=platform --mode=0750 /etc/federated-iot
+COPY --from=python-build /opt/venv /opt/venv
+COPY --from=python-build /src/algorithm-worker/src /opt/federated-iot/worker/src
+ENV PATH="/opt/venv/bin:${PATH}" \
+    PYTHONPATH="/opt/federated-iot/worker/src" \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+USER worker:platform
+ENTRYPOINT ["python", "-m", "federated_iot_worker.runner"]
+CMD ["--config", "/etc/federated-iot/platform.yaml"]

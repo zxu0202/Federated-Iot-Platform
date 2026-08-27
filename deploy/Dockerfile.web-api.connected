@@ -1,0 +1,63 @@
+# syntax=docker/dockerfile:1
+# Connected-source developer build. Official release builds continue to use
+# Dockerfile.web-api with reviewed offline vendor and npm-cache inputs.
+ARG GO_BUILDER_IMAGE
+ARG NODE_BUILDER_IMAGE
+ARG WEB_RUNTIME_IMAGE
+
+FROM ${GO_BUILDER_IMAGE} AS api-build
+WORKDIR /src/backend
+ARG GOPROXY=https://proxy.golang.org,direct
+ARG GOSUMDB=sum.golang.org
+ENV GOTOOLCHAIN=local \
+    GOPROXY=${GOPROXY} \
+    GOSUMDB=${GOSUMDB}
+RUN test "$(go env GOVERSION)" = "go1.23.0"
+COPY backend/go.mod backend/go.sum ./
+RUN go mod download && go mod verify
+COPY backend/cmd ./cmd
+COPY backend/internal ./internal
+ARG BUILD_VERSION
+ARG BACKEND_VERSION
+ARG VCS_REF
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -mod=readonly -trimpath \
+    -ldflags="-s -w -X main.version=${BACKEND_VERSION} -X main.revision=${VCS_REF}" \
+    -o /out/web-api ./cmd/web-api
+
+FROM ${NODE_BUILDER_IMAGE} AS spa-build
+WORKDIR /src/frontend
+ARG NPM_REGISTRY=https://registry.npmmirror.com
+RUN test "$(node --version)" = "v14.18.0" \
+    && test "$(npm --version)" = "6.14.15"
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci --ignore-scripts --cache /tmp/npm-cache --registry="${NPM_REGISTRY}"
+COPY frontend/public ./public
+COPY frontend/scripts ./scripts
+COPY frontend/src ./src
+COPY frontend/tsconfig.json frontend/tsconfig.build.json frontend/tsconfig.mock.json ./
+ARG FRONTEND_VERSION
+RUN node -e "if (require('./package.json').version !== '${FRONTEND_VERSION}') process.exit(1)"
+RUN npm run build
+
+FROM ${WEB_RUNTIME_IMAGE} AS runtime
+ARG BUILD_VERSION
+ARG BACKEND_VERSION
+ARG FRONTEND_VERSION
+ARG VCS_REF
+LABEL org.opencontainers.image.title="zx/federated-iot-platform" \
+      org.opencontainers.image.version="${BUILD_VERSION}" \
+      org.opencontainers.image.revision="${VCS_REF}" \
+      org.opencontainers.image.source-build-profile="connected-source" \
+      com.zx.federated-iot.backend.version="${BACKEND_VERSION}" \
+      com.zx.federated-iot.frontend.version="${FRONTEND_VERSION}"
+RUN groupadd --system --gid 10000 platform \
+    && useradd --system --uid 10001 --gid platform --no-create-home --shell /usr/sbin/nologin webapi \
+    && install --directory --owner=webapi --group=platform --mode=0750 /var/lib/iot/datasets \
+    && install --directory --owner=webapi --group=platform --mode=0750 /var/lib/iot/runs \
+    && install --directory --owner=root --group=platform --mode=0750 /etc/federated-iot
+COPY --from=api-build /out/web-api /usr/local/bin/web-api
+COPY --from=spa-build /src/frontend/dist /opt/federated-iot/spa
+USER webapi:platform
+EXPOSE 8080
+ENTRYPOINT ["/usr/local/bin/web-api"]
+CMD ["serve"]

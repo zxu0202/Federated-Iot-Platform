@@ -1,0 +1,5 @@
+534464893e35693a3dd1af8c7a9efa1f0da78ffcab580d3f8b64aa682e131d01  backend/go.mod
+91f1a749534aa3796620eb4234076b9ccd74932dd428e51b5a2372dbff254eeb  backend/go.sum
+b523226eb1eed73d5a7cc03a2468053866389b34c041a25412f71bffd97d6ad9  backend/vendor/modules.txt
+f75f1d9421cb94d3eb0671f41f1d620988dfd35d2647618267bec8512c4189da  deploy/offline/go/backend-vendor.tree.sha256
+9331daf643ab5b306b672fe2f88aa4a09d6fab509d882a1c98d3d6d3c17819fa  deploy/sbom/backend-go-1.23.0.cdx.json
