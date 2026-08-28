@@ -17,8 +17,7 @@ abstract: >-
 authors:
   - family-names: "Zhang"
     given-names: "Xu"
-    affiliation: ""
-    orcid: "https://orcid.org/<0000-0002-2768-5623>"
+    orcid: "https://orcid.org/0000-0002-2768-5623"
 
 keywords:
   - industrial Internet of Things
