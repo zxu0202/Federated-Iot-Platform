@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+
+title: "ZX Federated IoT Platform"
+type: software
+version: "1.0.0-m1"
+license: "MIT"
+
+abstract: >-
+  ZX Federated IoT Platform is a local, Docker-based simulation system
+  for power-load prediction and alarm analysis. It provides a
+  PostgreSQL-backed workflow covering CSV intake, preprocessing,
+  immutable parameter snapshots, queued execution, three-agent
+  simulation, prediction intervals, fused diagnostics, alarm analysis,
+  history replay, and result export.
+
+authors:
+  - family-names: "Zhang"
+    given-names: "Xu"
+    affiliation: ""
+    orcid: "https://orcid.org/<0000-0002-2768-5623>"
+
+keywords:
+  - industrial Internet of Things
+  - power-load prediction
+  - alarm analysis
+  - multi-agent simulation
+  - uncertainty quantification
+  - Docker
+  - PostgreSQL
+  - reproducible research software
