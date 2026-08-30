@@ -1,4 +1,6 @@
 # ZX Federated IoT Platform
+[![Source Software DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22137126.svg)](https://doi.org/10.5281/zenodo.22137126)
+[![Offline Deployment Package DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22167547.svg)](https://doi.org/10.5281/zenodo.22167547)
 
 ZX Federated IoT Platform is a local, Docker-based simulation system for power-load prediction and alarm analysis. The M1 release provides one complete PostgreSQL-backed workflow from CSV intake to preprocessing, parameter snapshots, queued simulation, three-Agent execution, diagnostics, history, replay, and export.
 
@@ -122,3 +124,21 @@ M1 fixes the Worker pool capacity at one and each simulation contains exactly th
 ## License
 
 MIT
+
+## Archived releases and citation
+
+### Source software
+
+The public source release `v1.0.1-m1` is permanently archived in Zenodo:
+
+- DOI: [10.5281/zenodo.22137126](https://doi.org/10.5281/zenodo.22137126)
+
+### Offline deployment package
+
+The associated frozen offline deployment package for `v1.0.1-m1`,
+including OCI/Docker images, CycloneDX SBOMs, provenance records,
+runtime manifests, validation utilities, and SHA-256 checksums, is
+archived separately in Zenodo:
+
+- Version DOI: [10.5281/zenodo.22167547](https://doi.org/10.5281/zenodo.22167547)
+- All-versions DOI: [10.5281/zenodo.22167546](https://doi.org/10.5281/zenodo.22167546)
